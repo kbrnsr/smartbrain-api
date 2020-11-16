@@ -1,11 +1,12 @@
 import express from 'express';
-import bcrypt from 'bcrypt-nodejs';
+import cors from 'cors';
+// import bcrypt from 'bcrypt-nodejs';
 
 // Placeholder to avoid linting issue
-bcrypt.genSalt(10);
+// bcrypt.genSalt(10);
 
 const app = express();
-const port = 3000;
+const port = 2999;
 const database = {
   users: [
     {
@@ -28,6 +29,7 @@ const database = {
 };
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send(database.users);
