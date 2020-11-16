@@ -1,9 +1,20 @@
 import express from 'express';
 import cors from 'cors';
-// import bcrypt from 'bcrypt-nodejs';
+import knex from 'knex';
 
+// import bcrypt from 'bcrypt-nodejs';
 // Placeholder to avoid linting issue
 // bcrypt.genSalt(10);
+
+const db = knex({
+  client: 'pg',
+  connection: {
+    host: '127.0.0.1',
+    user: 'smartbrain',
+    password: 'smartbrain',
+    database: 'smartbrain',
+  },
+});
 
 const app = express();
 const port = 2999;
@@ -52,31 +63,27 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
-  const { users } = database;
-  users.push({
-    id: '125',
-    name,
-    email,
-    password,
-    entries: 0,
-    joined: new Date(),
-  });
-  res.json(users[users.length - 1]);
+  db('sb_users')
+    .returning('*')
+    .insert({ email, name, joined: new Date() })
+    .then((user) => {
+      res.json(user.shift());
+    })
+    .catch(() => res.status(400).json('Unable to register'));
 });
 
 app.get('/profile/:id', (req, res) => {
   const { id } = req.params;
-  let found = false;
-  database.users.forEach((user) => {
-    if (user.id === id) {
-      found = true;
-      res.json(user);
-    }
-  });
-  if (!found) {
-    res.status(400).json(`user with id ${id} not found`);
-  }
-  return 0;
+  db.select('*')
+    .from('sb_users')
+    .where({ id })
+    .then((user) => {
+      if (user.length) {
+        res.json(user.shift());
+      } else {
+        res.status(400).json(`Profile with id ${id} not found`);
+      }
+    });
 });
 
 app.put('/image', (req, res) => {
