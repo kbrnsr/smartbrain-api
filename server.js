@@ -88,25 +88,12 @@ app.get('/profile/:id', (req, res) => {
 
 app.put('/image', (req, res) => {
   const { id } = req.body;
-  let found = false;
-  /* eslint-disable no-param-reassign */
-  database.users.forEach((user) => {
-    if (user.id === id) {
-      found = true;
-      user.entries += 1;
-      res.json(user.entries);
-    }
-  });
-  /* eslint-enable no-param-reassign */
-  if (!found) {
-    res.status(400).json(`user with id ${id} not found`);
-  }
+  db('sb_users')
+    .where('id', '=', id)
+    .increment('entries', 1)
+    .returning('entries')
+    .then((entries) => res.json(entries.shift()))
+    .catch(() =>
+      res.status(400).json(`Unable to update entries for user with id ${id}`)
+    );
 });
-
-/*
-/ res --> This is working
-/signin --> POST success/fail 
-/register --> POST = user
-/profile/:userId --> GET = user
-/image --> PUT --> user.rank
- */
