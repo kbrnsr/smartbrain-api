@@ -1,3 +1,21 @@
+import Clarifai from 'clarifai';
+
+const app = new Clarifai.App({
+  apiKey: 'REPLACETHISTEXTWITHAPIKEY',
+});
+
+const handleApiCall = (req, res) => {
+  const { input } = req.body;
+  app.models
+    .predict('d02b4508df58432fbb84e800597b8959', input)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch(() =>
+      res.status(400).json('Unable to connect to backend clarifai api')
+    );
+};
+
 const handleImageGet = (req, res, db) => {
   const { id } = req.body;
   db('sb_users')
@@ -10,4 +28,4 @@ const handleImageGet = (req, res, db) => {
     );
 };
 
-export default { handleImageGet };
+export default { handleImageGet, handleApiCall };

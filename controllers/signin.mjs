@@ -1,6 +1,10 @@
 const handleSignin = (req, res, db, bcrypt) => {
   const reqEmail = req.body.email;
   const reqPassword = req.body.password;
+  if (!reqEmail || !reqPassword) {
+    res.status(400).json('Sign in info cannot be empty');
+    return;
+  }
   db.select('email', 'hash')
     .from('sb_login')
     .where('email', '=', reqEmail)

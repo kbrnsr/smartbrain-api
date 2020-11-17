@@ -48,3 +48,7 @@ app.get('/profile/:id', (req, res) => {
 app.put('/image', (req, res) => {
   image.handleImageGet(req, res, db);
 });
+
+app.post('/imageurl', (req, res) => {
+  image.handleApiCall(req, res);
+});
