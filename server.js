@@ -9,19 +9,18 @@ import profile from './controllers/profile.mjs';
 import image from './controllers/image.mjs';
 
 dotenv.config();
+const port = process.env.PORT;
+const dbURL = process.env.DATABASE_URL;
 
 const db = knex({
   client: 'pg',
   connection: {
-    host: '127.0.0.1',
-    user: 'smartbrain',
-    password: 'smartbrain',
-    database: 'smartbrain',
+    host: dbURL,
+    ssl: true,
   },
 });
 
 const app = express();
-const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
