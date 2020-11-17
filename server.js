@@ -11,16 +11,29 @@ import image from './controllers/image.mjs';
 dotenv.config();
 const port = process.env.PORT;
 const dbURL = process.env.DATABASE_URL;
-
-const db = knex({
-  client: 'pg',
-  connection: {
-    connectionString: dbURL,
-    ssl: {
-      rejectUnauthorized: false,
+const devEnv = process.env.NODE_ENV;
+const dbConfig = (env, url) => {
+  if (env === 'development') {
+    return {
+      client: 'pg',
+      connection: {
+        connectionString: dbURL,
+        ssl: false,
+      },
+    };
+  }
+  return {
+    client: 'pg',
+    connection: {
+      connectionString: url,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     },
-  },
-});
+  };
+};
+
+const db = knex(dbConfig(devEnv, dbURL));
 
 const app = express();
 
