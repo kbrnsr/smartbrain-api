@@ -2,10 +2,10 @@
   "name": "smartbrain-api",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon ./server.js"
   },
   "author": "Kabeer Nasir",
   "license": "MIT",
