@@ -2,10 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import knex from 'knex';
 import bcrypt from 'bcrypt-nodejs';
+import dotenv from 'dotenv';
 import register from './controllers/register.mjs';
 import signin from './controllers/signin.mjs';
 import profile from './controllers/profile.mjs';
 import image from './controllers/image.mjs';
+
+dotenv.config();
 
 const db = knex({
   client: 'pg',
@@ -18,7 +21,7 @@ const db = knex({
 });
 
 const app = express();
-const port = 2999;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
